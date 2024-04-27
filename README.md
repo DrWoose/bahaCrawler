@@ -12,6 +12,7 @@ pip install pandas
 pip install openpyxl
 pip install selenium
 pip install bs4
+pip install webdriver-manager
 ```
 
 ## Usage
