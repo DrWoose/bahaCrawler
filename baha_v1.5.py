@@ -6,6 +6,7 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC, wait
+from selenium.webdriver.common.by import By
 import requests
 import re
 import json
@@ -20,7 +21,8 @@ from bs4.element import ResultSet,Tag
 
 
 # initialize the Chrome driver
-driver = webdriver.Chrome(ChromeDriverManager().install())
+driver = webdriver.Edge()
+#driver = webdriver.Chrome(ChromeDriverManager().install())
 #driver.maximize_window()
 # head to github login page
 word = "培根"#搜尋字詞
@@ -38,7 +40,7 @@ class bahaInfo:
         self.parser = 'html.parser'
         self.keyWordList = ['培根'] #搜尋字詞的資料夾名稱 可改可不改 我是懶得改
         self.bsn = "60076"
-        self.download = T#True的話會下載圖片
+        self.download = False#True的話會下載圖片
         self.pageDelay = 1#一頁停1秒
         self.innerDelay = 1#文章內每頁停1秒
 
@@ -50,6 +52,7 @@ class bahaInfo:
             print('[INFO]搜尋{}'.format(word))
             driver.get(url)            
             print('[INFO]「{}」搜尋成功，進入分析'.format(word))
+            WebDriverWait(driver,60).until(lambda x: x.find_element(By.ID,"BH-menu-path"))
             self.analysis(driver.page_source)
                
 
@@ -59,8 +62,7 @@ class bahaInfo:
         bahaContent = bs(data, self.parser)
         pageInfo = bahaContent.find('p', class_="BH-pagebtnA")
 
-        self.limitPage = bs(
-            str(pageInfo), 'html.parser').find_all('a')[-1].text
+        self.limitPage = bs(str(pageInfo), 'html.parser').find_all('a')[-1].text
 
         self.analysisPages()
 
